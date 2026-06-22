@@ -1,13 +1,11 @@
 from sqlalchemy import String, DateTime, Integer
-from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column
+from sqlalchemy.orm import Mapped, mapped_column, relationship
 from datetime import datetime
+from app.database import Base
 
 def get_username(context):
     email = context.get_current_parameters()["email"]
     return email.split('@')[0]
-
-class Base(DeclarativeBase):
-    pass
 
 class User(Base):
     __tablename__ = "Users"
@@ -17,3 +15,5 @@ class User(Base):
     username : Mapped[str | None] = mapped_column(String(50), default=get_username)
     created_at : Mapped[datetime] = mapped_column(DateTime(timezone=True), nullable=False)
     rank : Mapped[int | None] = mapped_column(Integer, nullable=True)
+
+    reviews = relationship("Review")

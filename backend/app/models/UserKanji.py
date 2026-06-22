@@ -1,9 +1,7 @@
 from sqlalchemy import ForeignKey, DateTime, String, Integer, Float, func
-from sqlalchemy.orm import DeclarativeBase, relationship, Mapped, mapped_column
+from sqlalchemy.orm import relationship, Mapped, mapped_column
 from datetime import datetime 
-
-class Base(DeclarativeBase):
-    pass
+from app.database import Base
 
 class UserKanjiEntry(Base):
     __tablename__ = "UserKanji"
@@ -14,8 +12,8 @@ class UserKanjiEntry(Base):
     interval_days : Mapped[float] = mapped_column(Float) #1 equivalent to 1 day
     times_reviewed : Mapped[int] = mapped_column(Integer, default = 0)
     times_correct : Mapped[int] = mapped_column(Integer, default=0)
-    last_reviewed_at : Mapped[datetime] = mapped_column(DateTime(timezone=True))
-    next_review_at : Mapped[datetime] = mapped_column(DateTime(timezone=True), default = func.now())
+    last_reviewed_at : Mapped[datetime] = mapped_column(DateTime(timezone=True), default=func.now(), nullable= False)
+    next_review_at : Mapped[datetime] = mapped_column(DateTime(timezone=True), nullable = False)
     ease_factor : Mapped[float] = mapped_column(Float, nullable = True)
     created_at : Mapped[datetime] = mapped_column(DateTime, nullable=False)
     
