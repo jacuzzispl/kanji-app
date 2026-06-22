@@ -1,0 +1,23 @@
+from sqlalchemy import ForeignKey, DateTime, String, Integer, Float, func
+from sqlalchemy.orm import DeclarativeBase, relationship, Mapped, mapped_column
+from datetime import datetime 
+
+class Base(DeclarativeBase):
+    pass
+
+class UserKanjiEntry(Base):
+    __tablename__ = "UserKanji"
+    id : Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
+    user_id : Mapped[int] = mapped_column(Integer, ForeignKey("Users.id"))
+    kanji_id : Mapped[int] = mapped_column(ForeignKey("Kanji.id"))
+    status : Mapped[str] = mapped_column(String, nullable=False)
+    interval_days : Mapped[float] = mapped_column(Float) #1 equivalent to 1 day
+    times_reviewed : Mapped[int] = mapped_column(Integer, default = 0)
+    times_correct : Mapped[int] = mapped_column(Integer, default=0)
+    last_reviewed_at : Mapped[datetime] = mapped_column(DateTime(timezone=True))
+    next_review_at : Mapped[datetime] = mapped_column(DateTime(timezone=True), default = func.now())
+    ease_factor : Mapped[float] = mapped_column(Float, nullable = True)
+    created_at : Mapped[datetime] = mapped_column(DateTime, nullable=False)
+    
+    user = relationship("User")
+    kanji = relationship("Kanji")
