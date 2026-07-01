@@ -4,10 +4,10 @@ from datetime import datetime
 from app.database import Base
 
 class UserKanjiEntry(Base):
-    __tablename__ = "UserKanji"
+    __tablename__ = "user_kanji"
     id : Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
-    user_id : Mapped[int] = mapped_column(Integer, ForeignKey("Users.id"))
-    kanji_id : Mapped[int] = mapped_column(ForeignKey("Kanji.id"))
+    user_id : Mapped[int] = mapped_column(Integer, ForeignKey("user_profiles.id"))
+    kanji_id : Mapped[int] = mapped_column(ForeignKey("kanji.id"))
     status : Mapped[str] = mapped_column(String, nullable=False)
     interval_days : Mapped[float] = mapped_column(Float) #1 equivalent to 1 day
     times_reviewed : Mapped[int] = mapped_column(Integer, default = 0)

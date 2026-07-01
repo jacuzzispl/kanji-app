@@ -5,7 +5,7 @@ from app.database import Base
 
 
 class Kanji(Base):
-    __tablename__ = "Kanji"
+    __tablename__ = "kanji"
     id : Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
     character : Mapped[str] = mapped_column(String)
     meaning: Mapped[str]
