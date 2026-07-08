@@ -33,7 +33,15 @@ async def get_kanji_data_by_grade(grade:int) -> List[str]:
         grade_list = [kanji for kanji in grade_list]
         results = await asyncio.gather(*[get_single_kanji_data(session, kanji) for kanji in grade_list])
     
+<<<<<<< Updated upstream
     data = [result for result in results]
+=======
+<<<<<<< HEAD
+    data = [result["meaning"] for result in results]
+=======
+    data = [result for result in results]
+>>>>>>> dev
+>>>>>>> Stashed changes
 
     print([kanji for kanji in data])
             
