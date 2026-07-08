@@ -1,13 +1,8 @@
-import os
-import requests
-import time
 import asyncio
 import aiohttp
-from dotenv import load_dotenv
-from sqlalchemy.orm import sessionmaker
-from sqlalchemy import create_engine
 from utils.db import table_is_populated
-from app.models.Kanji import Kanji
+from database import engine, SessionLocal
+from app.models import Kanji
 from typing import List
 
 async def get_kanji_data_by_grade(grade:int) -> List[str]:
@@ -25,17 +20,18 @@ async def get_kanji_data_by_grade(grade:int) -> List[str]:
         "Content-Type": "application/json"
     }
 
-    response = requests.get(url, headers=headers, params=querystring)
-    grade_list = [kanji['kanji']['character'] for kanji in response.json()]
+    async with aiohttp.ClientSession(connector=aiohttp.TCPConnector(ssl=False)) as session:
+        async with session.get(url=url, headers=headers, params=querystring) as response:
+
+            kanji_response = await response.json()
+
+            grade_list = [kanji["kanji"]["character"] for kanji in kanji_response]
+    
+            results = await asyncio.gather(*[get_single_kanji_data(session, kanji) for kanji in grade_list])
     
 
-    async with aiohttp.ClientSession() as session:
-        grade_list = [kanji for kanji in grade_list]
-        results = await asyncio.gather(*[get_single_kanji_data(session, kanji) for kanji in grade_list])
     
-    data = [result["meaning"] for result in results]
-
-    print([kanji for kanji in data])
+    return results
             
 
 
@@ -57,24 +53,35 @@ async def get_single_kanji_data(session, kanji:str) -> dict:
     
 
 
-def seed_kanji_table():
+async def seed_kanji_table(grade_number: int):
 
-    load_dotenv()
-    engine = create_engine(os.getenv("DATABASE_URL"))
+    with SessionLocal() as db:
 
+        if table_is_populated(table="kanji", engine=engine)[0]:
+            return "Table is already populated"
 
-    if table_is_populated(table="kanji", engine=engine)[0]:
-        return "Table is already populated"
+        kanji_grade_list = await get_kanji_data_by_grade(grade_number)
 
-    grade_one_kanji = get_kanji_data_by_grade(1)
+        #print([f"{kanji_grade_list[i]["rad_utf"]}\n" for i in range(len(kanji_grade_list))])
+
+        print(kanji_grade_list[1])
+
+        for kanji in kanji_grade_list:
+            new_kanji = Kanji(
+                character = kanji["ka_utf"],
+                meaning = kanji["meaning"],
+                onyomi = kanji["onyomi"] if kanji["onyomi"] != "n/a" else None,
+                kunyomi = kanji["kunyomi"] if kanji["kunyomi"] != "n/a" else None,
+                radical = kanji["rad_utf"],
+                radical_meaning = kanji["rad_meaning"],
+                stroke_count = kanji["kstroke"],
+                jlpt_level = grade_number
+            )
+            db.add(new_kanji)
+
+        db.commit()
 
 
 
 if __name__ == "__main__":
-    asyncio.run(get_kanji_data_by_grade(1))
-
-    
-
-
-
-
+    asyncio.run(seed_kanji_table(1))
