@@ -62,9 +62,7 @@ async def seed_kanji_table(grade_number: int):
 
         kanji_grade_list = await get_kanji_data_by_grade(grade_number)
 
-        #print([f"{kanji_grade_list[i]["rad_utf"]}\n" for i in range(len(kanji_grade_list))])
 
-        print(kanji_grade_list[1])
 
         for kanji in kanji_grade_list:
             new_kanji = Kanji(
@@ -84,4 +82,4 @@ async def seed_kanji_table(grade_number: int):
 
 
 if __name__ == "__main__":
-    asyncio.run(seed_kanji_table(1))
+    asyncio.run(seed_kanji_table()) # for MVP, grade 1 is fine but for production would need 1-5 immediately
