@@ -1,7 +1,7 @@
-from sqlalchemy import String, DateTime, Integer
+from sqlalchemy import String, DateTime, Integer, func
 from sqlalchemy.orm import Mapped, mapped_column, relationship
-from datetime import datetime
-from ..models import Base
+from datetime import datetime, timezone
+from app.database import Base
 
 def get_username(context):
     email = context.get_current_parameters()["email"]
@@ -13,7 +13,7 @@ class User(Base):
     email : Mapped[str] = mapped_column(String(256), unique=True, index=True, nullable=False)
     password_hash : Mapped[str] = mapped_column(String(255), nullable=False)
     username : Mapped[str | None] = mapped_column(String(50), default=get_username)
-    created_at : Mapped[datetime] = mapped_column(DateTime(timezone=True), nullable=False)
+    created_at : Mapped[datetime] = mapped_column(DateTime(timezone=True), nullable=False, server_default= func.now())
     rank : Mapped[int | None] = mapped_column(Integer, nullable=True)
 
     reviews = relationship("Review")
