@@ -13,7 +13,7 @@ class User(Base):
     email : Mapped[str] = mapped_column(String(256), unique=True, index=True, nullable=False)
     password_hash : Mapped[str] = mapped_column(String(255), nullable=False)
     username : Mapped[str | None] = mapped_column(String(50), default=get_username)
-    created_at : Mapped[datetime] = mapped_column(DateTime(timezone=True), nullable=False, server_gdefault= func.now())
+    created_at : Mapped[datetime] = mapped_column(DateTime(timezone=True), nullable=False, server_default= func.now())
     rank : Mapped[int | None] = mapped_column(Integer, nullable=True)
 
     reviews = relationship("Review")
