@@ -6,8 +6,8 @@ from pwdlib import PasswordHash
 from pydantic import BaseModel, EmailStr
 from datetime import datetime, timedelta, timezone
 from database import get_db
-from models import User
-from schemas.auth import TokenResponse, RegisterRequest
+from ..models import User
+from ..schemas import TokenResponse, RegisterRequest
 import jwt
 from jwt.exceptions import InvalidTokenError
 import os

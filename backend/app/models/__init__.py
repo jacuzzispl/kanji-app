@@ -1,7 +1,7 @@
-from app.models.Users import User
-from app.models.Kanji import Kanji
-from app.models.UserKanji import UserKanjiEntry
-from app.models.ReviewLog import Review
+from .Users import User
+from .Kanji import Kanji
+from .UserKanji import UserKanjiEntry
+from .ReviewLog import Review
 
 from sqlalchemy.orm import DeclarativeBase
 

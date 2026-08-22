@@ -1,7 +1,7 @@
 from sqlalchemy import String, DateTime, Integer
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from datetime import datetime
-from ..models import Base
+from .Base import Base
 
 def get_username(context):
     email = context.get_current_parameters()["email"]

@@ -1,7 +1,7 @@
 from sqlalchemy import Column, Integer, String, Float, DateTime, ForeignKey, JSON
 from sqlalchemy.orm import relationship, Mapped, mapped_column
 from datetime import datetime, timezone
-from ..models import Base
+from .Base import Base
 
 
 class Kanji(Base):
