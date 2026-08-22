@@ -1,7 +1,7 @@
 from sqlalchemy import Integer, Float, String, DateTime, ForeignKey, String
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from datetime import datetime
-from app.database import Base
+from .Base import Base
 
 
 class Review(Base):
@@ -16,6 +16,3 @@ class Review(Base):
     ease_factor_before : Mapped[float] = mapped_column(Float, nullable = False)
     interval_before : Mapped[float] = mapped_column(Float)
     interval_after : Mapped[float] = mapped_column(Float)
-
-
-

@@ -1,4 +1,9 @@
-from models.Users import User
-from models.Kanji import Kanji
-from models.UserKanji import UserKanjiEntry
-from models.ReviewLog import Review
+from .Users import User
+from .Kanji import Kanji
+from .UserKanji import UserKanjiEntry
+from .ReviewLog import Review
+
+from sqlalchemy.orm import DeclarativeBase
+
+class Base(DeclarativeBase):
+    pass
