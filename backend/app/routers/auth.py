@@ -30,38 +30,41 @@ class TokenData(BaseModel):
 
 
 def verify_password(password: str, db_password: str) -> bool:
-    return password_hash.verifty(password, db_password)
+    return password_hash.verify(password, db_password)
 
 def get_password_hash(password: str) -> str:
     return password_hash.hash(password)
 
-async def get_user(username: str, session: AsyncSession = Depends(get_db())) -> User | None:
+async def get_user(username: str, session: AsyncSession) -> User | None:
     #check if the username exists
 
-    user = await session.scalars(select(User).where(User.username == username))
+    query = await session.execute(select(User).where(User.username == username))
+    user = query.scalar_one_or_none()
+
     return user if user else None
 
-async def authenticate_user(username: str, password: str) -> User | bool:
-    user = await get_user(username=username)
+async def authenticate_user(username: str, password: str, session: AsyncSession) -> User | bool:
+    user = await get_user(username=username, session=session)
     if not user:
         verify_password(password, DUMMY_HASH)
+        return False
     if not verify_password(password, user.password_hash):
         return False
     return user
 
 
-async def create_access_token(data: dict, expires_delta: timedelta | None):
+async def create_access_token(data: dict, expires_delta: timedelta | None = None):
     payload = data.copy()
     if expires_delta:
-        expire = datetime.now(timezone.utc) + expires_delta
+        expire = datetime.now(timezone.utc) + timedelta(minutes=expires_delta)
     else:
-        expire = datetime.now(timezone.utc) + ACCESS_TOKEN_EXPIRE_MINUTES
+        expire = datetime.now(timezone.utc) + timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
     payload["exp"] = expire
     encoded_jwt = jwt.encode(payload, key=SECRET_KEY, algorithm=ALGORITHM) 
 
     return encoded_jwt
 
-async def get_current_user(session: Annotated[AsyncSession, Depends(get_db)], token: Annotated[str, Depends(oauth2_scheme)]):
+async def get_current_user(session: AsyncSession, token: Annotated[str, Depends(oauth2_scheme)]):
     credentials_exception = HTTPException(
         status_code=401
     )
@@ -79,23 +82,27 @@ async def get_current_user(session: Annotated[AsyncSession, Depends(get_db)], to
     return user
 
 @router.post("/token", response_model=TokenResponse)
-async def login_for_access_token(form_data: Annotated[OAuth2PasswordRequestForm, Depends()]) -> TokenResponse:
-    user = await authenticate_user(username=form_data.username, password=form_data.password)
-    if not user:
-        raise HTTPException(status_code=401)
+async def login_for_access_token(form_data: Annotated[OAuth2PasswordRequestForm, Depends()],
+                                  session: Annotated[AsyncSession, Depends(get_db)]) -> TokenResponse:
     
+    user = await authenticate_user(username=form_data.username, password=form_data.password, session=session)
+    if not user:
+        raise HTTPException(status_code=401, detail="Wrong email or password")
     return TokenResponse(
-        access_token=create_access_token(user.id),
+        access_token= await create_access_token(data={"sub": user.username}),
         token_type="bearer"
     )
 
 @router.post("/register", response_model=TokenResponse)
 async def register(session: Annotated[AsyncSession, Depends(get_db)], registration_data: RegisterRequest) -> TokenResponse:
-    query = await session.execute(select(User).where(User.email==registration_data.username))
-    if query:
-        return HTTPException(status_code=400, detail="Email already registered")
+    query = await session.execute(select(User).where(User.email==registration_data.email))
+    existing_user = query.scalar_one_or_none()
+    if existing_user:
+
+        raise HTTPException(status_code=400, detail="Email already registered")
+    
     user = User(
-        email= registration_data.username,
+        email= registration_data.email,
         password_hash = password_hash.hash(registration_data.password),
         created_at=datetime.now(timezone.utc)
     )
@@ -105,7 +112,7 @@ async def register(session: Annotated[AsyncSession, Depends(get_db)], registrati
     await session.refresh(user)
 
     return TokenResponse(
-        access_token= create_access_token(data={"sub": user.username}),
+        access_token= await create_access_token(data={"sub": user.username}),
         token_type="bearer"
     )
 
