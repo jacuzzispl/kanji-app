@@ -10,7 +10,7 @@ async def seed_study_kanji(level: int, session_factory = SessionLocal):
         query = await session.execute(select(Kanji).where(Kanji.jlpt_level == level))
         result = query.scalars()
     for i in result:
-        print(i)
+        print(i.__dict__)
 
 async def main():
     await seed_study_kanji(1)
