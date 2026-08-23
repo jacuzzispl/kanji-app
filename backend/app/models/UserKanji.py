@@ -1,7 +1,7 @@
 from sqlalchemy import ForeignKey, DateTime, String, Integer, Float, func
 from sqlalchemy.orm import relationship, Mapped, mapped_column
 from datetime import datetime 
-from ..models import Base
+from .Base import Base
 
 class UserKanjiEntry(Base):
     __tablename__ = "user_kanji"
