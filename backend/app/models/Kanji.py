@@ -9,12 +9,8 @@ class Kanji(Base):
     id : Mapped[int] = mapped_column(primary_key=True, 	autoincrement=True)
     character : Mapped[str] = mapped_column(String)
     meaning: Mapped[str]
-    onyomi_katakana : Mapped[str]
-    onyomi_romaji : Mapped[str]
-    kunyomi_hiragana : Mapped[str | None]
-    kunyomi_romaji : Mapped[str | None]
-    radical : Mapped[str | None]
-    radical_meaning = Mapped[str | None]
-    stroke_count : Mapped[int]
     jlpt_level : Mapped[int]
     curriculumn_order : Mapped[int]
+    onyomi: Mapped[str]
+    kunyomi: Mapped[str]
+    radical: Mapped[str]
