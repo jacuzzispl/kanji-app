@@ -1,6 +1,7 @@
 from sqlalchemy import Column, Integer, String, Float, DateTime, ForeignKey, JSON
 from sqlalchemy.orm import relationship, Mapped, mapped_column
 from datetime import datetime, timezone
+from typing import Optional
 from .Base import Base
 
 
@@ -10,7 +11,7 @@ class Kanji(Base):
     character : Mapped[str] = mapped_column(String)
     meaning: Mapped[str]
     jlpt_level : Mapped[int]
-    curriculumn_order : Mapped[int]
+    curriculumn_order : Mapped[Optional[int]]
     onyomi: Mapped[str]
     kunyomi: Mapped[str]
     radical: Mapped[str]

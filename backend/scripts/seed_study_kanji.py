@@ -1,19 +1,24 @@
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select
 from app.models import Kanji, UserKanjiEntry
-from database import SessionLocal
+from app.database import SessionLocal
 import asyncio
 
-async def seed_study_kanji(level: int, session_factory = SessionLocal):
+async def seed_study_kanji(user_id: int , level: int, session_factory: AsyncSession = SessionLocal) -> None:
     #get all the kanji from db by their jlpt level
     async with SessionLocal() as session:
         query = await session.execute(select(Kanji).where(Kanji.jlpt_level == level))
         result = query.scalars()
-    for i in result:
-        print(i.__dict__)
+    for kanji in result:
+        print(kanji.__dict__)
+        kanji_for_study = UserKanjiEntry(user_id=user_id,
+                                          kanji_id=kanji.id,
+                                            status="Not Learned"
+                                            )
+        session.add(kanji_for_study)
+    
+    await session.commit()
 
-async def main():
-    await seed_study_kanji(1)
 
-# Run the main async loop
-asyncio.run(main())
+if __name__ == "__main__":
+    asyncio.run(seed_study_kanji(1, 1))
