@@ -26,7 +26,7 @@ oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/auth/login")
 
 
 class TokenData(BaseModel):
-    username: str | None
+    user_id: int | None
 
 
 def verify_password(password: str, db_password: str) -> bool:
@@ -70,13 +70,13 @@ async def get_current_user(session: AsyncSession, token: Annotated[str, Depends(
     )
     try:
         payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
-        username = payload.get("sub")
-        if username is None:
+        user_id = payload.get("sub")
+        if user_id is None:
             raise credentials_exception
-        token_data = TokenData(username=username)
+        token_data = TokenData(user_id=user_id)
     except InvalidTokenError:
         raise credentials_exception
-    user = session.scalars(select(User).where(User.username == token_data.username))
+    user = session.scalars(select(User).where(User.id == token_data.user_id))
     if not user:
         raise credentials_exception
     return user
@@ -89,7 +89,7 @@ async def login_for_access_token(form_data: Annotated[OAuth2PasswordRequestForm,
     if not user:
         raise HTTPException(status_code=401, detail="Wrong email or password")
     return TokenResponse(
-        access_token= await create_access_token(data={"sub": user.username}),
+        access_token= await create_access_token(data={"sub": user.id}),
         token_type="bearer"
     )
 
@@ -112,7 +112,7 @@ async def register(session: Annotated[AsyncSession, Depends(get_db)], registrati
     await session.refresh(user)
 
     return TokenResponse(
-        access_token= await create_access_token(data={"sub": user.username}),
+        access_token= await create_access_token(data={"sub": user.id}),
         token_type="bearer"
     )
 
