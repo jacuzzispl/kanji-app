@@ -10,7 +10,6 @@ async def seed_study_kanji(user_id: int , level: int, session_factory: AsyncSess
         query = await session.execute(select(Kanji).where(Kanji.jlpt_level == level))
         result = query.scalars()
     for kanji in result:
-        print(kanji.__dict__)
         kanji_for_study = UserKanjiEntry(user_id=user_id,
                                           kanji_id=kanji.id,
                                             status="Not Learned"
