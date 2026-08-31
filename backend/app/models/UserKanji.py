@@ -18,5 +18,5 @@ class UserKanjiEntry(Base):
     ease_factor : Mapped[Optional[float]] = mapped_column(Float, nullable = True)
     created_at : Mapped[datetime] = mapped_column(DateTime(timezone=True), default=func.now(), nullable=False)
     
-    user = relationship("User")
-    kanji = relationship("Kanji")
+    user = relationship("User", lazy="selectin")
+    kanji = relationship("Kanji", lazy="selectin")
