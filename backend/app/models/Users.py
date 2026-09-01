@@ -16,4 +16,4 @@ class User(Base):
     created_at : Mapped[datetime] = mapped_column(DateTime(timezone=True), nullable=False)
     rank : Mapped[int | None] = mapped_column(Integer, nullable=True)
 
-    reviews = relationship("Review")
+    reviews = relationship("Review", lazy="selectin")
