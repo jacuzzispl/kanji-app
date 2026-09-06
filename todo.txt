@@ -1,0 +1,10 @@
+- i need to change the app.database import in seed-scripts because for some reason
+  now database.py is in backend and not app. so....
+- also i want to go to the models and change all the fields which have nullable = false to Mapped[Optional[then the data type]]
+- im also missing a line i believe for Base.metadata.create_all(async_engine) but check with Claude first
+- also in the relationships for some of the models, i havent put the class it is referencing i believe. 
+  so it should be something like kanji = relationships("Kanji", back_populates="whatever")
+
+- in /routers/auth.py @router.post("/register") if the 
+
+- i might need to enforce that everyone has unique usernames
