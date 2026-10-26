@@ -1,0 +1,37 @@
+from datetime import datetime
+from enum import Enum
+
+from pydantic import BaseModel, Field
+
+
+class QuestionType(str, Enum):
+    meaning = "meaning" 
+    reading = "reading"
+
+
+class AnswerIn(BaseModel):
+    question_type: QuestionType
+    correct: bool
+    response_ms: int = Field(ge=0, le=600_000)
+
+
+class KanjiResultIn(BaseModel):
+    kanji_id: int
+    answers: list[AnswerIn] = Field(min_length=1)
+    # meaning_incorrect / reading_incorrect from the client are ignored (Pydantic drops
+    # unknown fields by default); the server recomputes them from `answers`.
+
+
+class LessonCompletePayload(BaseModel):
+    results: list[KanjiResultIn] = Field(min_length=1)
+
+
+class KanjiResultOut(BaseModel):
+    kanji_id: int
+    quality: int
+    interval_days: int
+    next_review_at: datetime
+
+
+class LessonCompleteResponse(BaseModel):
+    results: list[KanjiResultOut]
