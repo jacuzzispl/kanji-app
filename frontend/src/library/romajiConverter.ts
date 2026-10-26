@@ -58,6 +58,7 @@ const ROMAJI_TABLE: [RegExp, string][] = [
   [/sa/gi, 'さ'],
   [/si/gi, 'し'],
   [/shi/gi, 'し'],
+  [/tsu/gi, 'つ'],
   [/su/gi, 'す'],
   [/se/gi, 'せ'],
   [/so/gi, 'そ'],
@@ -65,7 +66,6 @@ const ROMAJI_TABLE: [RegExp, string][] = [
   [/ti/gi, 'ち'],
   [/chi/gi, 'ち'],
   [/tu/gi, 'つ'],
-  [/tsu/gi, 'つ'],
   [/te/gi, 'て'],
   [/to/gi, 'と'],
   [/na/gi, 'な'],
@@ -195,20 +195,13 @@ export function cleanReading(reading: string): string {
  */
 export function matchesReading(
   userInput: string,
-  onyomi?: string[] | string | null,
-  kunyomi?: string[] | string | null
+  onyomi: string[],
+  kunyomi: string[]
 ): boolean {
   const normalizedUser = finalizeHiragana(userInput.trim().toLowerCase());
   const userHiragana = katakanaToHiragana(normalizedUser);
 
-  const parseReadings = (val: unknown): string[] => {
-    if (!val) return [];
-    if (Array.isArray(val)) return val.map((s) => String(s).trim()).filter(Boolean);
-    if (typeof val === 'string') return val.split(',').map((s) => s.trim()).filter(Boolean);
-    return [];
-  };
-
-  const allReadings = [...parseReadings(onyomi), ...parseReadings(kunyomi)];
+  const allReadings = [...onyomi, ...kunyomi];
 
   for (const r of allReadings) {
     const cleaned = cleanReading(r);
@@ -225,6 +218,8 @@ export function matchesReading(
     }
   }
 
+  console.log(userHiragana);
+
   return false;
 }
 
@@ -233,24 +228,15 @@ export function matchesReading(
  */
 export function matchesMeaning(
   userInput: string,
-  meanings?: string[] | string | null
+  meanings: string[]
 ): boolean {
   const normalized = userInput.trim().toLowerCase();
   if (!normalized) return false;
 
-  const parseMeanings = (val: unknown): string[] => {
-    if (!val) return [];
-    if (Array.isArray(val)) return val.map((s) => String(s).trim()).filter(Boolean);
-    if (typeof val === 'string') return val.split(',').map((s) => s.trim()).filter(Boolean);
-    return [];
-  };
-
-  const meaningList = parseMeanings(meanings);
-
-  for (const m of meaningList) {
+  for (const m of meanings) {
     if (normalized === m.trim().toLowerCase()) return true;
 
-    // Split compound meanings e.g. "Day / Sun" or "metal, gold, money"
+    // Split compound meanings e.g. "Day / Sun"
     const subMeanings = m.split(/[\/,;]/).map((s) => s.trim().toLowerCase());
     if (subMeanings.includes(normalized)) return true;
   }

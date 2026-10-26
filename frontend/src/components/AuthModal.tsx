@@ -66,7 +66,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({
       name: 'David B.',
       email: 'david@sakurakanji.jp',
       avatarChar: '学',
-      jlptGoal: 'JLPT N3',
+      jlptGoal: 'JLPT N5',
       streakDays: 14,
       kanjiLearned: 184,
     };

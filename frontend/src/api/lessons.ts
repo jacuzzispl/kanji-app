@@ -1,6 +1,6 @@
 import { LessonKanji, LessonCompletePayload, LessonCompleteResponse } from '../types';
 
-export const USE_MOCK = true;
+export const USE_MOCK = false;
 
 const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000';
 
@@ -338,7 +338,7 @@ export async function getLessonBatch(limit = 5): Promise<LessonKanji[]> {
     return MOCK_KANJI_POOL.slice(0, limit).map(adaptApiKanjiToLessonKanji);
   }
 
-  const rawList = await apiFetch<any[]>(`/lessons?limit=${limit}`);
+  const rawList = await apiFetch<any[]>(`/study`);
   return (Array.isArray(rawList) ? rawList : []).map(adaptApiKanjiToLessonKanji);
 }
 
@@ -364,7 +364,7 @@ export async function submitLessonResults(
     };
   }
 
-  return apiFetch<LessonCompleteResponse>('/lessons/complete', {
+  return apiFetch<LessonCompleteResponse>('study', {
     method: 'POST',
     body: JSON.stringify(payload),
   });
