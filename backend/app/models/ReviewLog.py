@@ -1,7 +1,7 @@
 from sqlalchemy import Integer, Float, String, DateTime, ForeignKey, String
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from datetime import datetime
-from ..models import Base
+from .Base import Base
 
 
 class Review(Base):
