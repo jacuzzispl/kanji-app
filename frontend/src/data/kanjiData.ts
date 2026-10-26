@@ -136,5 +136,156 @@ export const KANJI_DATA: KanjiItem[] = [
       { japanese: '平和', reading: 'へいわ', meaning: 'Peace.' },
       { japanese: '和食', reading: 'わしょく', meaning: 'Traditional Japanese cuisine.' }
     ]
+  },
+  {
+    id: 'hi',
+    kanji: '日',
+    meaning: 'Day / Sun / Japan',
+    kunyomi: 'ひ (hi), -び (-bi), -か (-ka)',
+    onyomi: 'ニチ (nichi), ジツ (jitsu)',
+    romaji: 'hi',
+    jlpt: 'N5',
+    strokes: 4,
+    radicals: ['日 (sun)'],
+    mnemonic: 'The circle of the radiant sun with a solar flare in its center.',
+    examples: [
+      { japanese: '日本', reading: 'にほん', meaning: 'Japan.' },
+      { japanese: '毎日', reading: 'まいにち', meaning: 'Every day.' },
+      { japanese: '日曜日', reading: 'にちようび', meaning: 'Sunday.' }
+    ]
+  },
+  {
+    id: 'mizu',
+    kanji: '水',
+    meaning: 'Water',
+    kunyomi: 'みず (mizu)',
+    onyomi: 'スイ (sui)',
+    romaji: 'mizu',
+    jlpt: 'N5',
+    strokes: 4,
+    radicals: ['水 (water)'],
+    mnemonic: 'A flowing river stream with splashes of water droplets on each side.',
+    examples: [
+      { japanese: '冷たい水', reading: 'つめたい みず', meaning: 'Cold water.' },
+      { japanese: '水曜日', reading: 'すいようび', meaning: 'Wednesday.' },
+      { japanese: '水泳', reading: 'すいえい', meaning: 'Swimming.' }
+    ]
+  },
+  {
+    id: 'yama',
+    kanji: '山',
+    meaning: 'Mountain',
+    kunyomi: 'やま (yama)',
+    onyomi: 'サン (san), ザン (zan)',
+    romaji: 'yama',
+    jlpt: 'N5',
+    strokes: 3,
+    radicals: ['山 (mountain)'],
+    mnemonic: 'Three towering mountain peaks rising toward the heavens.',
+    examples: [
+      { japanese: '富士山', reading: 'ふじさん', meaning: 'Mount Fuji.' },
+      { japanese: '山登り', reading: 'やまのぼり', meaning: 'Mountain climbing.' },
+      { japanese: '火山', reading: 'かざん', meaning: 'Volcano.' }
+    ]
+  },
+  {
+    id: 'kawa',
+    kanji: '川',
+    meaning: 'River / Stream',
+    kunyomi: 'かわ (kawa)',
+    onyomi: 'セン (sen)',
+    romaji: 'kawa',
+    jlpt: 'N5',
+    strokes: 3,
+    radicals: ['川 (river)'],
+    mnemonic: 'Three meandering river currents flowing downstream.',
+    examples: [
+      { japanese: '小川', reading: 'おがわ', meaning: 'Brook / Stream.' },
+      { japanese: '河川', reading: 'かせん', meaning: 'Rivers / Waterways.' }
+    ]
+  },
+  {
+    id: 'sora',
+    kanji: '空',
+    meaning: 'Sky / Empty / Void',
+    kunyomi: 'そら (sora), あ-く (a-ku)',
+    onyomi: 'クウ (kuu)',
+    romaji: 'sora',
+    jlpt: 'N4',
+    strokes: 8,
+    radicals: ['穴 (cave/hole)', '工 (craft)'],
+    mnemonic: 'A vaulted cave opening up into the boundless open sky.',
+    examples: [
+      { japanese: '青空', reading: 'あおぞら', meaning: 'Blue sky.' },
+      { japanese: '空気', reading: 'くうき', meaning: 'Air / Atmosphere.' },
+      { japanese: '空港', reading: 'くうこう', meaning: 'Airport.' }
+    ]
+  },
+  {
+    id: 'kaze',
+    kanji: '風',
+    meaning: 'Wind / Breeze / Style',
+    kunyomi: 'かぜ (kaze)',
+    onyomi: 'フウ (fuu)',
+    romaji: 'kaze',
+    jlpt: 'N4',
+    strokes: 9,
+    radicals: ['几 (enclosure)', '虫 (insect)'],
+    mnemonic: 'Insects carried effortlessly upon gusting wind currents.',
+    examples: [
+      { japanese: '春風', reading: 'はるかぜ', meaning: 'Spring breeze.' },
+      { japanese: '台風', reading: 'たいふう', meaning: 'Typhoon.' },
+      { japanese: '和風', reading: 'わふう', meaning: 'Japanese style.' }
+    ]
+  },
+  {
+    id: 'ame',
+    kanji: '雨',
+    meaning: 'Rain',
+    kunyomi: 'あめ (ame), あま- (ama-)',
+    onyomi: 'ウ (u)',
+    romaji: 'ame',
+    jlpt: 'N5',
+    strokes: 8,
+    radicals: ['雨 (rain)'],
+    mnemonic: 'Clouds hovering over the horizon dropping four raindrops.',
+    examples: [
+      { japanese: '大雨', reading: 'おおあめ', meaning: 'Heavy rain.' },
+      { japanese: '雨季', reading: 'うき', meaning: 'Rainy season.' }
+    ]
+  },
+  {
+    id: 'gaku',
+    kanji: '学',
+    meaning: 'Study / Learn / Science',
+    kunyomi: 'まな-ぶ (mana-bu)',
+    onyomi: 'ガク (gaku)',
+    romaji: 'gaku',
+    jlpt: 'N5',
+    strokes: 8,
+    radicals: ['冖 (crown)', '子 (child)'],
+    mnemonic: 'A child (子) under a roof gaining wisdom and knowledge.',
+    examples: [
+      { japanese: '学生', reading: 'がくせい', meaning: 'Student.' },
+      { japanese: '大学', reading: 'だいがく', meaning: 'University.' },
+      { japanese: '学校', reading: 'がっこう', meaning: 'School.' }
+    ]
+  },
+  {
+    id: 'yume',
+    kanji: '夢',
+    meaning: 'Dream / Vision',
+    kunyomi: 'ゆめ (yume)',
+    onyomi: 'ム (mu)',
+    romaji: 'yume',
+    jlpt: 'N3',
+    strokes: 13,
+    radicals: ['艹 (grass)', '罒 (net)', '夕 (evening)'],
+    mnemonic: 'In the quiet evening (夕), your resting eyes envision distant dreams.',
+    examples: [
+      { japanese: '夢を見る', reading: 'ゆめを みる', meaning: 'To have a dream.' },
+      { japanese: '夢中', reading: 'むちゅう', meaning: 'Absorbed / Entranced.' },
+      { japanese: '悪夢', reading: 'あくむ', meaning: 'Nightmare.' }
+    ]
   }
 ];

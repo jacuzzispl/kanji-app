@@ -1,9 +1,17 @@
 from fastapi import FastAPI
-from app.database import engine
+from fastapi.middleware.cors import CORSMiddleware
+from database import engine
 from .routers import auth, kanji
 
+origins = ["*"]
 
 app = FastAPI()
+app.add_middleware(CORSMiddleware,
+               allow_origins=origins,
+               allow_credentials=False,
+               allow_headers=["*"],
+               allow_methods=["*"])
+
 app.include_router(auth.router)
 app.include_router(kanji.router)
 

@@ -38,7 +38,7 @@ def get_password_hash(password: str) -> str:
 async def get_user(username: str, session: AsyncSession) -> User | None:
     #check if the username exists
 
-    query = await session.execute(select(User).where(User.username == username))
+    query = await session.execute(select(User).where(User.username == username or User.email == username))
     user = query.scalar_one_or_none()
 
     return user if user else None
