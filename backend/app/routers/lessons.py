@@ -4,7 +4,8 @@ from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from app.database import get_current_user, get_db      # adjust paths
+from app.database import get_db   
+from app.routers.auth import get_current_user
 from app.models import Review, User, UserKanji
 from app.schemas.lessons import (
     KanjiResultOut,
@@ -12,22 +13,23 @@ from app.schemas.lessons import (
     LessonCompleteResponse,
 )
 from app.services.srs import SrsState, quality_from_answers, sm2
+from typing import Annotated
 
 router = APIRouter(prefix="/lessons", tags=["lessons"])
 
 
-@router.post("/complete", response_model=LessonCompleteResponse)
+@router.post("/complete")
 async def complete_lesson(
     payload: LessonCompletePayload,
-    current_user: User = Depends(get_current_user),
-    db: AsyncSession = Depends(get_db),
-):
+    session : Annotated[AsyncSession, Depends(get_db)]
+) -> LessonCompleteResponse:
+    user = get_current_user()
     kanji_ids = [r.kanji_id for r in payload.results]
     if len(set(kanji_ids)) != len(kanji_ids):
         raise HTTPException(status_code=400, detail="Duplicate kanji_id in results")
 
     # One query for all of this user's SRS rows involved in the session
-    rows = await db.execute(
+    rows = await session.execute(
         select(UserKanji).where(
             UserKanji.user_id == current_user.id,
             UserKanji.kanji_id.in_(kanji_ids),
@@ -52,7 +54,7 @@ async def complete_lesson(
         before = SrsState(uk.repetitions, uk.ease_factor, uk.interval_days)
         after = sm2(q, before)
 
-        db.add(
+        session.add(
             Review(
                 user_id=current_user.id,
                 kanji_id=result.kanji_id,
@@ -83,5 +85,4 @@ async def complete_lesson(
         )
 
     print("submission received")
-    await db.commit()
-    return LessonCompleteResponse(results=out)
+    await session.commit()
