@@ -89,7 +89,7 @@ async def login_for_access_token(form_data: Annotated[OAuth2PasswordRequestForm,
     if not user:
         raise HTTPException(status_code=401, detail="Wrong email or password")
     return TokenResponse(
-        access_token= await create_access_token(data={"sub": user.id}),
+        access_token= await create_access_token(data={"sub": str(user.id)}),
         token_type="bearer"
     )
 
@@ -112,7 +112,7 @@ async def register(session: Annotated[AsyncSession, Depends(get_db)], registrati
     await session.refresh(user)
 
     return TokenResponse(
-        access_token= await create_access_token(data={"sub": user.id}),
+        access_token= await create_access_token(data={"sub": str(user.id)}),
         token_type="bearer"
     )
 

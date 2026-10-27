@@ -18,7 +18,6 @@ SECRET_KEY = os.getenv("SECRET_KEY")
 async def get_study_kanji(session: Annotated[AsyncSession, Depends(get_db)],
                            token = Depends(oauth2_scheme)):
     
-    print(jwt.decode(token, SECRET_KEY, algorithms=["HS256"]))
     try:
         payload = jwt.decode(token, SECRET_KEY, algorithms=["HS256"])
         user_id = payload["sub"]
