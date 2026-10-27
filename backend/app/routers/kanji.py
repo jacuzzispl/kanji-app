@@ -16,15 +16,16 @@ SECRET_KEY = os.getenv("SECRET_KEY")
 
 @router.get("/study")
 async def get_study_kanji(session: Annotated[AsyncSession, Depends(get_db)],
-                           user_id = Depends(oauth2_scheme)):
+                           token = Depends(oauth2_scheme)):
     
-    """try:
+    print(jwt.decode(token, SECRET_KEY, algorithms=["HS256"]))
+    try:
         payload = jwt.decode(token, SECRET_KEY, algorithms=["HS256"])
         user_id = payload["sub"]
         if user_id is None:
             return HTTPException(status_code=401, detail="Could not find user")
-    except :
-        raise HTTPException(status_code=401)"""
+    except:
+        raise HTTPException(status_code=401)
     
 
     kanji_to_study = await session.execute(select(UserKanjiEntry).where(UserKanjiEntry.status == "Not Learned",
