@@ -4,7 +4,7 @@ from app.models import Kanji, UserKanjiEntry
 from app.database import SessionLocal
 import asyncio
 
-async def seed_study_kanji(user_id: int , level: int, session_factory: AsyncSession = SessionLocal) -> None:
+async def seed_study_kanji(user_id: int , level: int) -> None:
     #get all the kanji from db by their jlpt level
     async with SessionLocal() as session:
         query = await session.execute(select(Kanji).where(Kanji.jlpt_level == level))
