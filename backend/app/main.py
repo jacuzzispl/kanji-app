@@ -3,7 +3,7 @@ from app.database import engine
 from .routers import auth, kanji, lessons
 from fastapi.middleware.cors import CORSMiddleware
 
-origins = ["http://localhost:3000"]
+origins = ["*"]
 
 app = FastAPI()
 app.include_router(auth.router)

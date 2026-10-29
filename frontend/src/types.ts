@@ -19,7 +19,7 @@ export type RawBackendKanji = {
 
 export type LessonKanji = {
   id: number;
-  character: string;
+    aracter: string;
   meanings: string[];
   onyomi: string[];
   kunyomi: string[];

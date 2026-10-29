@@ -205,7 +205,7 @@ export function matchesReading(
 
   for (const r of allReadings) {
     const cleaned = cleanReading(r);
-    const hiraganaReading = katakanaToHiragana(cleaned);
+    const hiraganaReading = romajiToHiragana(cleaned);
 
     if (userHiragana === hiraganaReading) {
       return true;

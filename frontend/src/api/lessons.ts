@@ -364,6 +364,7 @@ export async function submitLessonResults(
     };
   }
 
+  console.log(JSON.stringify(payload));
   return apiFetch<LessonCompleteResponse>('/lessons/complete', {
     method: 'POST',
     body: JSON.stringify(payload),

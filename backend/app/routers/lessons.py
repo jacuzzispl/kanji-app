@@ -20,9 +20,9 @@ router = APIRouter(prefix="/lessons", tags=["lessons"])
 
 @router.post("/complete")
 async def complete_lesson(
-    payload: LessonCompletePayload,
-    session : Annotated[AsyncSession, Depends(get_db)]
-) -> LessonCompleteResponse:
+    session : Annotated[AsyncSession, Depends(get_db)], payload
+):
+    print("hiiiiii")
     user = get_current_user()
     kanji_ids = [r.kanji_id for r in payload.results]
     if len(set(kanji_ids)) != len(kanji_ids):

@@ -31,7 +31,7 @@ async def get_study_kanji(session: Annotated[AsyncSession, Depends(get_db)],
         await check_if_first_review(int(user_id), 1, session)
         
     except:
-        raise HTTPException(status_code=401)
+        raise HTTPException(status_code=401, detail="idk")
     
 
     kanji_to_study = await session.execute(select(UserKanjiEntry).where(UserKanjiEntry.status == "Not Learned",

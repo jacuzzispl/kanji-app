@@ -17,9 +17,10 @@ class AnswerIn(BaseModel):
 
 class KanjiResultIn(BaseModel):
     kanji_id: int
-    answers: list[AnswerIn] = Field(min_length=1)
+    meaning_incorrect: int
+    reading_incorrect: int
+    answers: list[AnswerIn]
     # meaning_incorrect / reading_incorrect from the client are ignored (Pydantic drops
-    # unknown fields by default); the server recomputes them from `answers`.
 
 
 class LessonCompletePayload(BaseModel):
