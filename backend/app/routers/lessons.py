@@ -37,7 +37,6 @@ async def complete_lesson(
             UserKanjiEntry.kanji_id.in_(kanji_ids),
         )
     )
-
     states = {uk.kanji_id: uk for uk in rows.scalars().all()}
 
     missing = set(kanji_ids) - states.keys()
