@@ -5,8 +5,10 @@ from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.database import get_db   
-from app.routers.auth import get_current_user
-from app.models import Review, User, UserKanji
+from app.routers.auth import get_current_user, oauth2_scheme
+from app.models.ReviewLog import Review
+from app.models.Users import User
+from app.models.UserKanji import UserKanjiEntry
 from app.schemas.lessons import (
     KanjiResultOut,
     LessonCompletePayload,
@@ -20,21 +22,22 @@ router = APIRouter(prefix="/lessons", tags=["lessons"])
 
 @router.post("/complete")
 async def complete_lesson(
-    session : Annotated[AsyncSession, Depends(get_db)], payload
+    session : Annotated[AsyncSession, Depends(get_db)], token: Annotated[str, Depends(oauth2_scheme)], results: LessonCompletePayload
 ):
-    print("hiiiiii")
-    user = get_current_user()
-    kanji_ids = [r.kanji_id for r in payload.results]
+    user = await get_current_user(session=session, token=token)
+    kanji_ids = [r.kanji_id for r in results.results]
     if len(set(kanji_ids)) != len(kanji_ids):
         raise HTTPException(status_code=400, detail="Duplicate kanji_id in results")
 
     # One query for all of this user's SRS rows involved in the session
+    print(type(user.id))
     rows = await session.execute(
-        select(UserKanji).where(
-            UserKanji.user_id == current_user.id,
-            UserKanji.kanji_id.in_(kanji_ids),
+        select(UserKanjiEntry).where(
+            UserKanjiEntry.user_id == int(user.id),
+            UserKanjiEntry.kanji_id.in_(kanji_ids),
         )
     )
+
     states = {uk.kanji_id: uk for uk in rows.scalars().all()}
 
     missing = set(kanji_ids) - states.keys()
@@ -47,7 +50,7 @@ async def complete_lesson(
     now = datetime.now(timezone.utc)
     out: list[KanjiResultOut] = []
 
-    for result in payload.results:
+    for result in results.results:
         uk = states[result.kanji_id]
         q, m_wrong, r_wrong, med_ms = quality_from_answers(result.answers)
 
@@ -56,7 +59,7 @@ async def complete_lesson(
 
         session.add(
             Review(
-                user_id=current_user.id,
+                user_id=user.id,
                 kanji_id=result.kanji_id,
                 reviewed_at=now,
                 quality=q,

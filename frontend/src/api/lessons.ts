@@ -355,7 +355,6 @@ export async function submitLessonResults(
 
     const now = new Date();
     const nextReview = new Date(now.getTime() + 4 * 60 * 60 * 1000).toISOString();
-
     return {
       created: payload.results.map((r) => ({
         kanji_id: r.kanji_id,
@@ -364,7 +363,7 @@ export async function submitLessonResults(
     };
   }
 
-  console.log(JSON.stringify(payload));
+  console.log(JSON.stringify(payload))
   return apiFetch<LessonCompleteResponse>('/lessons/complete', {
     method: 'POST',
     body: JSON.stringify(payload),

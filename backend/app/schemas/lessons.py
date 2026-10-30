@@ -7,6 +7,12 @@ from pydantic import BaseModel, Field
 class QuestionType(str, Enum):
     meaning = "meaning"   # match these values to your frontend's QuestionType
     reading = "reading"
+    stroke_draw = "stroke_draw"
+    kanji_to_romaji_english = "kanji_to_romaji_english"
+    english_to_hiragana = "english_to_hiragana"
+    sentence_translation = "sentence_translation"
+
+
 
 
 class AnswerIn(BaseModel):

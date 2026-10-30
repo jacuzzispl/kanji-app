@@ -64,19 +64,24 @@ async def create_access_token(data: dict, expires_delta: timedelta | None = None
 
     return encoded_jwt
 
-async def get_current_user(session: AsyncSession, token: Annotated[str, Depends(oauth2_scheme)]):
+async def get_current_user(session: AsyncSession, token: str):
+
     credentials_exception = HTTPException(
-        status_code=401
+        status_code=401,
+        detail="Credentials Exception"
     )
     try:
         payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
         user_id = payload.get("sub")
         if user_id is None:
+            print(user_id)
             raise credentials_exception
         token_data = TokenData(user_id=user_id)
     except InvalidTokenError:
         raise credentials_exception
-    user = session.scalars(select(User).where(User.id == token_data.user_id))
+    result = await session.scalars(select(User).where(User.id == token_data.user_id))
+    user = result.one_or_none()
+    print(user)
     if not user:
         raise credentials_exception
     return user
